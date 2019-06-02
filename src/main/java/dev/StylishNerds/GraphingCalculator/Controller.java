@@ -26,15 +26,12 @@ import javafx.scene.control.TableColumn.CellEditEvent;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Controller implements Initializable {
 
     // instance fields/variables
     private final SimpleStringProperty output;
-    private final OpMap operationMap;
     private final Parser parser;
-    private final ConcurrentHashMap<String, String> keyMap;
     private final ObservableList<GraphableFunc> userFunctions;
 
     /**
@@ -42,14 +39,13 @@ public class Controller implements Initializable {
      */
     public Controller() {
         this.output = new SimpleStringProperty("");
-        this.operationMap = new OpMap();
-        this.keyMap = operationMap.getMap();
         this.parser = new Parser();
         this.userFunctions = FXCollections.observableArrayList();
     }
 
     // FXML created objects, only import the objects
     // we actually need to control/modify
+    @FXML private Button clearButton;
     @FXML private Label display;        // handles the actual display/output for our calculator
     @FXML private TableView<GraphableFunc> userFuncTable;
     @FXML private TableColumn<GraphableFunc, String> indexCol;
@@ -90,10 +86,16 @@ public class Controller implements Initializable {
             computeNow();
         } else if (key.matches("C|CE")) {       // catch clear before generic alpha catching for functions
             output.set("");
-        } else if (isInputKey(key)) {
-            output.set(output.get() + key);
+        } else if (key.matches("⇍")) {
+            if (noOutput()) {
+                return;
+            } else {
+                output.set(output.get().substring(0, output.get().length() - 1));
+            }
         } else if (key.matches("\\+/-")) {      // handle 'invert' sign: i.e. "+/-" key
-            if (output.get().charAt(0) == '-') {
+            if (noOutput()) {
+                return;
+            } else if (output.get().charAt(0) == '-') {
                 output.set(output.get().substring(1)); // remove the leading '-'
             } else {
                 output.set("-(" + output.get() + ")"); // negate the current input & wrap in parens to be safe
@@ -101,18 +103,13 @@ public class Controller implements Initializable {
         } else if (key.matches("1/x")) {        // handle reciprocal key
             output.set("1/(" + output.get() + ")" );
             computeNow();
+        } else {
+            output.set(output.get() + key);
         }
     }
 
-    /**
-     * Check to see if the button or key pressed is a valid
-     * input key; e.g. a digit, period, or function name
-     * @param key   the string to check
-     * @return      true if the string is a digit, period
-     *              or open/close paren
-     */
-    private boolean isInputKey(String key) {
-        return (keyMap.keySet().contains(key) || key.matches("[0-9.()]"));
+    private boolean noOutput() {
+        return output.get().isEmpty() || output.get().isBlank();
     }
 
     /**
@@ -135,10 +132,15 @@ public class Controller implements Initializable {
      * @param e     the keyEvent to process
      */
     private void keyHandler(KeyEvent e) {
-        if (e.getCode() == KeyCode.ENTER) {
-            processInput("=");
-        } else {
-            processInput(e.getText());
+        KeyCode key = e.getCode();
+        switch (key) {
+            case ENTER:
+                processInput("="); break;
+            case DELETE:    // intentionally fall through
+            case BACK_SPACE:
+                processInput("⇍"); break;
+            default:
+                processInput(e.getText()); break;
         }
     }
 
@@ -178,7 +180,7 @@ public class Controller implements Initializable {
         HashMap<String, Double> vars = new HashMap<>();
         Expression exp = parser.eval(func.getRawInput(), vars);
         func.setExpression(exp);    // store the compiled expression for reuse
-        for (double i = -100; i <= 100; i+=0.1) {
+        for (double i = -100; i <= 100; i+=0.1) {   // make sure we have decent 'resolution'
             vars.put(func.getVarName(), i);
             double yVal = exp.eval();
             System.out.println("Evaluating for " + func.getVarName() + "=" + i + " => " + yVal);
