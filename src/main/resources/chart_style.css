@@ -1,0 +1,36 @@
+/*
+ * author: Jocelyn Mallon
+ * https://github.com/jocelynmallon
+ */
+.chart-symbol {
+    -fx-background-radius: 0px ;
+    -fx-padding: 2px ;
+    -fx-shape: "m22 12c0 5.523-4.477 10-10 10-5.5228 0-10-4.477-10-10 0-5.5228 4.4772-10 10-10 5.523 0 10 4.4772 10 10z";
+}
+
+.chart-line-symbol {
+    -fx-background-insets: 0,0;
+    -fx-background-radius: 0px;
+    -fx-padding: 0px;
+    -fx-shape: "";
+    -fx-background-color: transparent;
+}
+
+.chart-series-line.series0 { -fx-stroke: #a4414e; -fx-stroke-width: 2px; }
+.chart-series-line.series1 { -fx-stroke: #5fae4a; -fx-stroke-width: 2px; }
+.chart-series-line.series2 { -fx-stroke: #3650ac; -fx-stroke-width: 2px; }
+.chart-series-line.series3 { -fx-stroke: #111111; -fx-stroke-width: 2px; }
+.chart-series-line.series4 { -fx-stroke: #a6403c; -fx-stroke-width: 2px; }
+.chart-series-line.series5 { -fx-stroke: #68ad4a; -fx-stroke-width: 2px; }
+.chart-series-line.series6 { -fx-stroke: #3d62ae; -fx-stroke-width: 2px; }
+.chart-series-line.series7 { -fx-stroke: #333333; -fx-stroke-width: 2px; }
+.chart-series-line.series8 { -fx-stroke: #aa523e; -fx-stroke-width: 2px; }
+.chart-series-line.series9 { -fx-stroke: #75ae4c; -fx-stroke-width: 2px; }
+.chart-series-line.series10 { -fx-stroke: #4074ac; -fx-stroke-width: 2px; }
+.chart-series-line.series11 { -fx-stroke: #555555; -fx-stroke-width: 2px; }
+.chart-series-line.series12 { -fx-stroke: #a86341; -fx-stroke-width: 2px; }
+.chart-series-line.series13 { -fx-stroke: #82ae4a; -fx-stroke-width: 2px; }
+.chart-series-line.series14 { -fx-stroke: #4989ae; -fx-stroke-width: 2px; }
+.chart-series-line.series15 { -fx-stroke: #777777; -fx-stroke-width: 2px; }
+.chart-series-line.series16 { -fx-stroke: #884fc9; -fx-stroke-width: 2px; }
+

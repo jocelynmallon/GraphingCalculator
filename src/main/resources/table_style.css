@@ -1,0 +1,116 @@
+.table-view {
+    -fx-background-insets: 0;
+    -fx-background-color: #2E303E;
+    -fx-border-color: #1C1E26;
+    -fx-font-size: 10pt;
+}
+
+.table-view .arrow {
+    -fx-shape: "M8.124,13.625l4.125-3.375v2.889l-4.125,3.86L4,13.139V10.25L8.124,13.625z";
+}
+
+.table-view .corner {
+    -fx-background-color: #1C1E26;
+}
+
+.noheader .column-header-background {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+}
+
+.text-field-table-cell .text-field,
+.text-field-table-cell .text-field:focused {
+    -fx-background-insets: 0;
+    -fx-background-color: #6C6F93;
+    -fx-padding: 0;
+    -fx-background-radius: 0;
+    -fx-font-size: 10pt;
+    -fx-text-fill: #d7dae0;
+    -fx-text-box-border: transparent;
+    -fx-border-width: 0;
+    -fx-border-color:transparent;
+}
+
+.table-cell:focused {
+    -fx-background-insets: 0;
+    -fx-background-color: #2E303E;
+    -fx-padding: 0;
+    -fx-background-radius: 0;
+    -fx-font-size: 10pt;
+    -fx-text-fill: #d7dae0;
+    -fx-text-box-border: transparent;
+    -fx-border-width: 0;
+    -fx-border-color:transparent;
+}
+
+.check-box .box,
+.check-box:indeterminate .box,
+.check-box:indeterminate:selected .box {
+    -fx-background-color: #303744;
+    -fx-border-color: #282c34;
+    -fx-border-radius: 2;
+    -fx-border-width: 1;
+    -fx-max-width: 12;
+    -fx-max-height: 12;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: #FFFFFF;
+    -fx-shape: "M384 690l452-452 60 60-512 512-238-238 60-60z";
+    -fx-max-width: 12;
+    -fx-max-height: 10;
+}
+
+.check-box > .mark {
+    -fx-background-color: #FFFFFF;
+    -fx-shape: "M384 690l452-452 60 60-512 512-238-238 60-60z";
+    -fx-max-width: 12;
+    -fx-max-height: 10;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #25B0BC;
+    -fx-border-color: transparent;
+    -fx-border-radius: 2;
+    -fx-border-width: 1;
+    -fx-max-width: 12;
+    -fx-max-height: 12;
+}
+
+.table-cell:even {
+    -fx-border-color: transparent;
+    -fx-text-fill: #d7dae0;
+}
+.table-cell:odd {
+    -fx-border-color: transparent;
+    -fx-text-fill: #d7dae0;
+}
+
+.table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border: 1px;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-text-fill: #d7dae0;
+}
+
+.table-row-cell:filled:selected {
+    -fx-background-color: transparent;
+    -fx-border-color: #25B0BC;
+    -fx-text-fill: #d7dae0;
+    -fx-border: 1px;
+    -fx-background-insets: 0;
+}
+
+.table-row-cell:odd:filled:selected {
+    -fx-background-color: transparent;
+    -fx-border-color: #25B0BC;
+    -fx-text-fill: #d7dae0;
+    -fx-border: 1px;
+    -fx-background-insets: 0;
+}
+
+.table-column:empty {
+    -fx-background-color: transparent;
+}

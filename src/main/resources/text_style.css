@@ -1,0 +1,17 @@
+.Label {
+	-fx-background-color:  transparent;
+	-fx-background-radius: 3;
+	-fx-background-insets: 0;
+	-fx-font-size: 13pt;
+	-fx-text-fill: #d7dae0;
+}
+
+.text-field {
+    -fx-font-family: Consolas;
+	-fx-background-color:  #2E303E;
+    -fx-text-box-border: transparent;
+    -fx-border-color:transparent;
+    -fx-background-radius: 2;
+    -fx-font-size: 11pt;
+	-fx-text-fill: #d7dae0;
+}

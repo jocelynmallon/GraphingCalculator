@@ -1,0 +1,17 @@
+.root {
+    /* set the base grey/dark tint */
+    -fx-base: #1C1E26;
+    /* use a lighter focus/highlight color */
+    -fx-accent: #C7ACE5;
+    -fx-focus-color: #C7ACE5;
+}
+
+.split-pane:vertical > .split-pane-divider {
+    -fx-background-color: #884fc9;
+    -fx-padding: 1;
+}
+
+.split-pane:horizontal > .split-pane-divider {
+    -fx-background-color: #884fc9;
+    -fx-padding: 1;
+}

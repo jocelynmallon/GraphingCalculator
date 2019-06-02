@@ -1,0 +1,65 @@
+/*
+    Stylesheet for button objects in our GUI
+ */
+.button {
+	-fx-background-color: #2E303E;
+	-fx-background-radius: 3;
+	-fx-background-insets: 0;
+	-fx-font-size: 2em;
+	-fx-text-fill: #d7dae0;
+    -fx-effect: dropshadow(three-pass-box, #1C1E26, 0.5, 0.0, 1.0, 2.0);
+}
+
+.button:hover {
+	-fx-background-color: #6C6F93;
+}
+
+.button:pressed {
+    -fx-background-color: #25B0BC;
+}
+
+.equals-button {
+    -fx-background-color: #FAC29A;
+    -fx-background-radius: 3;
+    -fx-background-insets: 0;
+    -fx-text-fill: #1C1E26;
+    -fx-effect: dropshadow(three-pass-box, #1C1E26, 0.5, 0.0, 1.0, 2.0);
+}
+
+.equals-button:hover {
+    -fx-background-color: #FAB795;
+}
+
+.equals-button:pressed {
+    -fx-background-color: #F09483;
+}
+
+.clear-button {
+    -fx-background-color: #EC6A88;
+    -fx-background-radius: 3;
+    -fx-background-insets: 0;
+    -fx-text-fill: #d7dae0;
+}
+
+.clear-button:hover {
+    -fx-background-color: #E95678;
+}
+
+.clear-button:pressed {
+    -fx-background-color: #F43E5C;
+}
+
+.toggle-button-left {
+    -fx-border-radius: 3 0 0 3, 3 0 0 3, 2 0 0 2, 1 0 0 1;
+    -fx-background-radius: 3 0 0 3, 3 0 0 3, 2 0 0 2, 1 0 0 1;
+}
+
+.toggle-button-middle {
+    -fx-border-radius: 0, 0, 0, 0;
+    -fx-background-radius: 0, 0, 0, 0;
+}
+
+.toggle-button-right {
+    -fx-border-radius: 0 3 3 0, 0 3 3 0, 0 2 2 0, 0 1 1 0;
+    -fx-background-radius: 0 3 3 0, 0 3 3 0, 0 2 2 0, 0 1 1 0;
+}
