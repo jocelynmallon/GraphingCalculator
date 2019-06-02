@@ -8,6 +8,12 @@
 
     https://stackoverflow.com/questions/3422673/how-to-evaluate-a-math-expression-given-in-string-form
 
+    Precedence follows tiers, evaluating by climbing the tree
+    bottom to top, (e.g. highest tier to lowest tier)
+        1) Addition, Subtraction
+        2) Multiplication, Division, Modulo
+        3) Exponentiation, nth roots
+        4) Unary functions, parenthesis/groups
  */
 package dev.StylishNerds.GraphingCalculator;
 
@@ -33,17 +39,22 @@ public class Parser {
         reset();
     }
 
+    /**
+     * Populate our function map to lookup
+     * actual math functions, as DoubleUnaryOperations,
+     * based on input string/character.
+     */
     private void initFuncMap() {
-        map.put("sin", (val) -> Math.sin(val));
-        map.put("cos", (val) -> Math.cos(val));
-        map.put("tan", (val) -> Math.tan(val));
-        map.put("asin", (val) -> Math.asin(val));
-        map.put("acos", (val) -> Math.acos(val));
-        map.put("atan", (val) -> Math.atan(val));
-        map.put("sqrt", (val) -> Math.sqrt(val));
-        map.put("√", (val) -> Math.sqrt(val));
-        map.put("log", (val) -> Math.log(val));
-        map.put("exp", (val) -> Math.exp(val));
+        map.put("sin", Math::sin);
+        map.put("cos", Math::cos);
+        map.put("tan", Math::tan);
+        map.put("asin", Math::asin);
+        map.put("acos", Math::acos);
+        map.put("atan", Math::atan);
+        map.put("sqrt", Math::sqrt);
+        map.put("√", Math::sqrt);
+        map.put("log", Math::log);
+        map.put("exp", Math::exp);
     }
 
     /**
@@ -76,7 +87,7 @@ public class Parser {
      */
     private Expression parse() {
         next(); //consume the next character
-        Expression x = parseSum();
+        Expression x = parseTier1();
         if (pos < input.length()) {
             throw new RuntimeException("unexpected char: " + (char) val);
         }
@@ -84,19 +95,19 @@ public class Parser {
     }
 
     /**
-     * parseEXP -> handles lowest precedence operators;
+     * parseTier1 -> handles lowest precedence operators;
      * e.g. addition/subtraction
      *
      * @return  the compiled child expression
      */
-    private Expression parseSum() {
-        Expression x = parseMult();
+    private Expression parseTier1() {
+        Expression x = parseTier2();
         while (true) {
             if (consume('+')) {
-                Expression left = x, right = parseMult();
+                Expression left = x, right = parseTier2();
                 x = () -> left.eval() + right.eval();
             } else if (consume('-')) {
-                Expression left = x, right = parseMult();
+                Expression left = x, right = parseTier2();
                 x = () -> left.eval() - right.eval();
             } else {
                 return x;
@@ -105,22 +116,22 @@ public class Parser {
     }
 
     /**
-     * parseMult -> handles next tier precedence;
+     * parseTier2 -> handles next tier precedence;
      * e.g. multiplication/division/modular division
      *
      * @return  the compiled child expression
      */
-    private Expression parseMult() {
-        Expression x = parsePower();
+    private Expression parseTier2() {
+        Expression x = parseTier3();
         while (true) {
             if (consume('*')) {
-                Expression left = x, right = parsePower();
+                Expression left = x, right = parseTier3();
                 x = () -> left.eval() * right.eval();
             } else if (consume('/')) {
-                Expression left = x, right = parsePower();
+                Expression left = x, right = parseTier3();
                 x = () -> left.eval() / right.eval();
             }else if (consume('%')) {
-                Expression left = x, right = parsePower();
+                Expression left = x, right = parseTier3();
                 x = () -> left.eval() % right.eval();
             } else {
                 return x;
@@ -129,21 +140,21 @@ public class Parser {
     }
 
     /**
-     * parsePower -> handles exponentiation, including
+     * parseTier3 -> handles exponentiation, including
      * nth-roots (fractional exponents); next to highest
      * precedence before identity and unary functions;
      *
      * @return  the compiled child expression
      */
-    private Expression parsePower() {
-        Expression x = parseTerm();
+    private Expression parseTier3() {
+        Expression x = parseTier4();
         while (true) {
             // handle exponentiation & nth roots/fractional exponents
             if (consume('^')) {
-                Expression left = x, right = parseTerm();
+                Expression left = x, right = parseTier4();
                 x = () -> Math.pow(left.eval(), right.eval());
             } else if (consume('@')) {
-                Expression left = x, right = parseTerm();
+                Expression left = x, right = parseTier4();
                 x = () -> Math.pow(left.eval(), (1.0 / right.eval()));
             } else {
                 return x;
@@ -152,25 +163,25 @@ public class Parser {
     }
 
     /**
-     * parseTerm -> handles the highest tier operator
+     * parseTier4 -> handles the highest tier operator
      * precedence; unary functions, parens, etc.
      *
      * @return  the compiled child expression
      */
-    private Expression parseTerm() {
+    private Expression parseTier4() {
         int start = this.pos;
         Expression x;   // declare the Expression we're going to return
         if (consume('+')) {
-            x = parseTerm();
+            x = parseTier4();
             return x;
         } else if (consume('-')) {
-            Expression right = parseTerm();
+            Expression right = parseTier4();
             x = () -> (-1.0 * right.eval());
             return x;
         }
 
         if (consume('(')) {
-            x = parseSum();     // branch our tree until we hit the ')'
+            x = parseTier1();     // branch our tree until we hit the ')'
             consume(')');
             return x;
         } else if (isNumber()) {
@@ -185,7 +196,7 @@ public class Parser {
                 next();     // advance our parser to the first non-alpha
             }
             String fn = input.substring(start, this.pos); // get the name of the function
-            x = parseTerm();    // get the value the function will operate on
+            x = parseTier4();    // get the value the function will operate on
             if (map.containsKey(fn)) {
                 Expression arg = x;
                 DoubleUnaryOperator func = map.get(fn);
@@ -239,6 +250,7 @@ public class Parser {
     public String formatInput(String in) {
         return in.replace(" ", "")    // strip spaces
                 .replace("ⁿ√x", "@")    // use '@' to denote 'nth' roots
+                .replace("√", "sqrt")   // handle square roots
                 .replace("×", "*")      // convert 'pretty' * symbols
                 .replace("÷", "/");     // convert 'pretty' / symbols
         //System.out.println("Formatted exp: " + exp);

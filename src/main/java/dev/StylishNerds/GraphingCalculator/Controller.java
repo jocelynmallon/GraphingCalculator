@@ -45,7 +45,6 @@ public class Controller implements Initializable {
 
     // FXML created objects, only import the objects
     // we actually need to control/modify
-    @FXML private Button clearButton;
     @FXML private Label display;        // handles the actual display/output for our calculator
     @FXML private TableView<GraphableFunc> userFuncTable;
     @FXML private TableColumn<GraphableFunc, String> indexCol;
@@ -78,8 +77,9 @@ public class Controller implements Initializable {
      *              an actionevent
      */
     private void processInput(String key) {
+        String curr = output.get(); // grab existing output for efficiency
         // check for error string and clear it.
-        if (output.get().contains("Error")) {
+        if (curr.matches("Error|Undefined")) {
             output.set("");
         }
         if (key.matches("[=]")) {               // match equals/enter first
@@ -87,28 +87,34 @@ public class Controller implements Initializable {
         } else if (key.matches("C|CE")) {       // catch clear before generic alpha catching for functions
             output.set("");
         } else if (key.matches("⇍")) {
-            if (noOutput()) {
+            if (noEntry()) {
                 return;
             } else {
-                output.set(output.get().substring(0, output.get().length() - 1));
+                output.set(curr.substring(0, curr.length() - 1));
             }
         } else if (key.matches("\\+/-")) {      // handle 'invert' sign: i.e. "+/-" key
-            if (noOutput()) {
+            if (noEntry()) {
                 return;
-            } else if (output.get().charAt(0) == '-') {
-                output.set(output.get().substring(1)); // remove the leading '-'
+            } else if (curr.charAt(0) == '-') {
+                output.set(curr.substring(1)); // remove the leading '-'
             } else {
-                output.set("-(" + output.get() + ")"); // negate the current input & wrap in parens to be safe
+                output.set("-(" + curr + ")"); // negate the current input & wrap in parens to be safe
             }
         } else if (key.matches("1/x")) {        // handle reciprocal key
-            output.set("1/(" + output.get() + ")" );
+            output.set("1/(" + curr + ")" );
             computeNow();
         } else {
-            output.set(output.get() + key);
+            output.set(curr + key);
         }
     }
 
-    private boolean noOutput() {
+    /**
+     * Make sure the output string/display isn't empty
+     * before trying to either delete a character, or
+     * clear the entire output
+     * @return  true if output.get() is empty/blank
+     */
+    private boolean noEntry() {
         return output.get().isEmpty() || output.get().isBlank();
     }
 
@@ -120,7 +126,11 @@ public class Controller implements Initializable {
         try {
             Expression x = parser.eval(output.get());
             Double result = x.eval();
-            output.set(String.valueOf(result));
+            if (result.isNaN()) {   // make sure we actually have a number
+                output.set("Undefined");
+            } else {
+                output.set(String.valueOf(result));
+            }
         } catch (Exception e) {
             output.set("Error");
         }
