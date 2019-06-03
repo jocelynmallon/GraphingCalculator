@@ -199,7 +199,6 @@ public class Controller implements Initializable {
         for (double i = -100; i <= 100; i+=incr) {   // make sure we have decent 'resolution'
             vars.put(func.getVarName(), i);
             double yVal = exp.eval();
-            //System.out.println("Evaluating for " + func.getVarName() + "=" + i + " => " + yVal);
             data.getData().add(new Data<>(i, exp.eval()));
         }
     }
