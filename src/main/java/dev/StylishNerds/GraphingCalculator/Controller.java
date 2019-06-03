@@ -26,6 +26,7 @@ import javafx.scene.control.TableColumn.CellEditEvent;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
 public class Controller implements Initializable {
 
@@ -204,9 +205,8 @@ public class Controller implements Initializable {
     }
 
     private boolean isTrigFunc(String in) {
-    	return (in.toLowerCase().contains("sin") ||
-		    in.toLowerCase().contains("cos")) ||
-		    in.toLowerCase().contains("tan");
+	    Pattern p = Pattern.compile("sin|cos|tan|sec|csc|cot");
+	    return p.matcher(in).find();
     }
 
     /**

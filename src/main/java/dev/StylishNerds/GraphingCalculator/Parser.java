@@ -55,6 +55,9 @@ public class Parser {
         map.put("√", Math::sqrt);
         map.put("log", Math::log);
         map.put("exp", Math::exp);
+        map.put("sec", (val) -> (1.0 / Math.cos(val)));
+        map.put("csc", (val) -> (1.0 / Math.sin(val)));
+        map.put("cot", (val) -> (1.0 / Math.tan(val)));
     }
 
     /**
@@ -188,7 +191,7 @@ public class Parser {
             while(isNumber()) {
                 next();     // advance our parser to the first non-digit or '.'
             }
-            Double d = Double.parseDouble(input.substring(start, this.pos));
+            double d = Double.parseDouble(input.substring(start, this.pos));
             x = () -> d;
             return x;
         } else if (isAlpha()) {     // handle unary functions, and variables
@@ -226,7 +229,8 @@ public class Parser {
      * @return  true if a letter, otherwise false
      */
     private boolean isAlpha() {
-        return Character.isAlphabetic(val);
+        return Character.isAlphabetic(val) &&
+	        !(val == '(' || val == ')');
     }
 
     /**
@@ -247,14 +251,12 @@ public class Parser {
      * @param in    the expression to clean/format, as string
      * @return      the properly formatted expression
      */
-    public String formatInput(String in) {
+    private String formatInput(String in) {
         return in.replace(" ", "")    // strip spaces
                 .replace("ⁿ√x", "@")    // use '@' to denote 'nth' roots
                 .replace("√", "sqrt")   // handle square roots
                 .replace("×", "*")      // convert 'pretty' * symbols
                 .replace("÷", "/");     // convert 'pretty' / symbols
-        //System.out.println("Formatted exp: " + exp);
-        //return exp;
     }
 
     /**
