@@ -190,12 +190,24 @@ public class Controller implements Initializable {
         HashMap<String, Double> vars = new HashMap<>();
         Expression exp = parser.eval(func.getRawInput(), vars);
         func.setExpression(exp);    // store the compiled expression for reuse
-        for (double i = -100; i <= 100; i+=0.1) {   // make sure we have decent 'resolution'
+	    double incr;
+	    if (isTrigFunc(func.getRawInput())) {
+	    	incr = Math.PI/18;  // use incrememts of PI for trig functions
+	    } else {
+	    	incr = 0.1; // else use increments of 1/10th
+	    }
+        for (double i = -100; i <= 100; i+=incr) {   // make sure we have decent 'resolution'
             vars.put(func.getVarName(), i);
             double yVal = exp.eval();
-            System.out.println("Evaluating for " + func.getVarName() + "=" + i + " => " + yVal);
+            //System.out.println("Evaluating for " + func.getVarName() + "=" + i + " => " + yVal);
             data.getData().add(new Data<>(i, exp.eval()));
         }
+    }
+
+    private boolean isTrigFunc(String in) {
+    	return (in.toLowerCase().contains("sin") ||
+		    in.toLowerCase().contains("cos")) ||
+		    in.toLowerCase().contains("tan");
     }
 
     /**
